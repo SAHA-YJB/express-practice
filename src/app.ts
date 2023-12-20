@@ -3,8 +3,8 @@
 //  객체를 보낼 때는 json을 사용하는 것이 직관적
 //  res.json이나 res.send는 알아서 종료됨 end()를 따로 호출할 필요 없음
 import express, { Request, Response } from 'express';
-import { createUser, getUser, getUsers } from './controllers/users.conttoller';
-import { getPosts } from './controllers/posts.controller';
+import usersRouter from './routes/users.router';
+import postsRouter from './routes/posts.router';
 
 //  익스프레스 앱 생성
 const app = express();
@@ -18,23 +18,21 @@ const PORT = 4000;
 // 로그를 남기는 미들웨어
 app.use((req: Request, res: Response, next) => {
   const start = Date.now();
-  console.log(`[serverMiddleware]: ${req.method} ${req.url}`);
+  console.log(`[start]: ${req.method} ${req.url}`);
   next();
   const diffTime = Date.now() - start;
   // 요청부터 응답까지의 시간을 측정
-  console.log(`[start-end]: ${req.method} ${req.url} ${diffTime}ms`);
+  console.log(`[end]: ${req.method} ${req.baseUrl}${req.url} ${diffTime}ms`);
 });
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello World!');
 });
-//유저 목록 조회 API
-app.get('/users', getUsers);
-//유저 상세 조회 API
-app.get('/users/:userId', getUser);
-// 유저 생성 API
-app.post('/users', createUser);
-app.get('/posts', getPosts);
+
+// 라우터 등록
+app.use('/users', usersRouter);
+app.use('/posts', postsRouter);
+
 app.listen(PORT, () => {
   console.log(`[server]: Server is running at http://localhost:${PORT}`);
 });
