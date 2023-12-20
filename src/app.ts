@@ -4,8 +4,11 @@
 //  res.json이나 res.send는 알아서 종료됨 end()를 따로 호출할 필요 없음
 
 import express, { Request, Response } from 'express';
-//익스프레스 앱 생성
+//  익스프레스 앱 생성
 const app = express();
+//  유저생성시 언디파인드가 뜨는데 이유는 바디파서가 없어서
+//  이처리를 해줘야함
+app.use(express.json());
 
 const PORT = 4000;
 const Users = [
@@ -53,6 +56,20 @@ app.get('/users/:userId', (req: Request, res: Response) => {
   } else {
     res.sendStatus(404);
   }
+});
+
+// 유저 생성 API
+app.post('/users', (req: Request, res: Response) => {
+  if (!req.body.name) {
+    res.status(400).send('name이 없습니다.');
+    return;
+  }
+  const newUser = {
+    id: Date.now(),
+    name: req.body.name,
+  };
+  Users.push(newUser);
+  res.status(201).json(newUser);
 });
 
 app.listen(PORT, () => {
