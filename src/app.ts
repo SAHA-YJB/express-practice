@@ -9,7 +9,7 @@ import postsRouter from './routes/posts.router';
 //  익스프레스 앱 생성
 const app = express();
 //  유저생성시 언디파인드가 뜨는데 이유는 바디파서가 없어서
-//  이처리를 해줘야함
+//  이 처리를 해줘야함
 app.use(express.json());
 
 const PORT = 4000;
