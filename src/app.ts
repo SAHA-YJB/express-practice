@@ -8,6 +8,7 @@ import postsRouter from './routes/posts.router';
 import mongoose from 'mongoose';
 // 노드사용시 .env를 사용하기 위해 dotenv를 설치
 import dotenv from 'dotenv';
+import productsRouter from './routes/products.router';
 dotenv.config();
 //  익스프레스 앱 생성
 const app = express();
@@ -41,6 +42,7 @@ app.get('/', (req: Request, res: Response) => {
 // 라우터 등록
 app.use('/users', usersRouter);
 app.use('/posts', postsRouter);
+app.use('/products', productsRouter);
 
 app.listen(PORT, () => {
   console.log(`[server]: Server is running at http://localhost:${PORT}`);
