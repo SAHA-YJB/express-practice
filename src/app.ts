@@ -5,7 +5,10 @@
 import express, { Request, Response } from 'express';
 import usersRouter from './routes/users.router';
 import postsRouter from './routes/posts.router';
-
+import mongoose from 'mongoose';
+// 노드사용시 .env를 사용하기 위해 dotenv를 설치
+import dotenv from 'dotenv';
+dotenv.config();
 //  익스프레스 앱 생성
 const app = express();
 //  유저생성시 언디파인드가 뜨는데 이유는 바디파서가 없어서
@@ -14,6 +17,11 @@ app.use(express.json());
 app.use(express.static('public'));
 
 const PORT = 4000;
+// DB 연결
+mongoose
+  .connect(process.env.NODE_DB_URL!, {})
+  .then(() => console.log('DB connected'))
+  .catch((err) => console.log(err));
 
 // 미들웨어 등록
 // 로그를 남기는 미들웨어
