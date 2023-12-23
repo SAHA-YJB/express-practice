@@ -10,7 +10,7 @@ const createProduct = async (
   try {
     const createdProduct = await Product.create(req.body);
     res.status(201).json(createdProduct);
-  } catch (error: unknown) {
+  } catch (error) {
     next(error);
   }
 };
@@ -19,7 +19,7 @@ const getProducts = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const allProducts = await Product.find({});
     res.status(200).json(allProducts);
-  } catch (error: unknown) {
+  } catch (error) {
     next(error);
   }
 };
@@ -36,9 +36,53 @@ const getProductById = async (
     } else {
       res.status(404).send();
     }
-  } catch (error: unknown) {
+  } catch (error) {
     next(error);
   }
 };
 
-export { createProduct, getProducts, getProductById };
+const updateProduct = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    let updateProduct = await Product.findByIdAndUpdate(
+      req.params.productId,
+      req.body,
+      { new: true }
+    );
+    if (updateProduct) {
+      res.status(200).json(updateProduct);
+    } else {
+      res.status(404).send();
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+const deleteProduct = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    let deleteProduct = await Product.findByIdAndDelete(req.params.productId);
+    if (deleteProduct) {
+      res.status(200).json(deleteProduct);
+    } else {
+      res.status(404).send();
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+export {
+  createProduct,
+  getProducts,
+  getProductById,
+  updateProduct,
+  deleteProduct,
+};
