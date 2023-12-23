@@ -2,7 +2,7 @@
 //  res.json() : json을 보내는 메서드 -> send보다 호출이 한번 적음
 //  객체를 보낼 때는 json을 사용하는 것이 직관적
 //  res.json이나 res.send는 알아서 종료됨 end()를 따로 호출할 필요 없음
-import express, { Request, Response } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import usersRouter from './routes/users.router';
 import postsRouter from './routes/posts.router';
 import mongoose from 'mongoose';
@@ -34,9 +34,14 @@ app.use((req: Request, res: Response, next) => {
   // 요청부터 응답까지의 시간을 측정
   console.log(`[end]: ${req.method} ${req.baseUrl}${req.url} ${diffTime}ms`);
 });
+// 에러처리기 생성
+app.use((error: Error, req: Request, res: Response) => {
+  res.json({ message: error.message });
+});
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello World!');
+app.get('/', (req: Request, res: Response, next: NextFunction) => {
+  // 동기적으로 에러를 처리하고 next()를 호출
+  next(new Error('에러 발생'));
 });
 
 // 라우터 등록
